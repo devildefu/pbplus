@@ -1,0 +1,58 @@
+name: Build library
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ingore:
+      - '**/*.md'
+  release:
+    types: [created]
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        submodules: recursive
+    - uses: msys2/setup-msys2@v2
+      name: Install MinGW-W64
+      with:
+        msystem: MINGW32
+        update: true
+        install: mingw-w64-i686-toolchain mingw-w64-i686-cmake git mingw-w64-i686-ninja mingw-w64-i686-SDL2
+    - name: Set build type
+      run: |
+        if [[ $GITHUB_EVENT_NAME == 'release' ]]; then
+          echo "BUILD_TYPE=Release" >> "$GITHUB_ENV"
+        else
+          echo "BUILD_TYPE=Debug" >> "$GITHUB_ENV"
+        fi
+    - name: Build
+      run: |
+        cmake . -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+        cmake --build build
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v7
+      with:
+        name: 'libpbloader.dll'
+        path: 'build\libpbloader.dll'
+        archive: false
+  
+  release:
+    runs-on: windows-latest
+    if: github.event_name == 'Release' && github.event.action == 'Created'
+    needs: windows
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/download-artifact@v8
+    - uses: AButler/upload-release-assets@v3.0
+      with:
+        files: 'libpbloader.dll'
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
