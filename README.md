@@ -12,15 +12,15 @@ A small modification for "Bob's Adventure" that adds several enhancements:
 
 ## Installation
 
-1. Download `libpbloader.dll` from [the latest release](https://example.com).
-2. Download the patched executable from [here](https://example.com).
+1. Download `libpbloader.dll` from [the latest release](https://github.com/devildefu/pbplus/releases/latest).
+2. Download the patched executable from [here](contrib/PerypetieBoba.exe).
 3. Place both files in the game's installation directory.
 
 ## Configuration
 
 Create a configuration file named `pbplus.ini` in the game's directory.
 
-- View all available options: [Sample configuration file](https://example.com)
+- View all available options: [Sample configuration file](pbplus.sample.ini)
 - Or, copy the sample file to your directory and modify it as needed.
 
 ## Building
