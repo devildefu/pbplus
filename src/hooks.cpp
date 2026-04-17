@@ -15,7 +15,7 @@ using namespace MologieDetours;
 
 constexpr auto SDL_LIB = "SDL2.dll";
 
-static int was_renderer_created = false;
+static bool was_renderer_created = false;
 
 typedef SDL_Renderer *(*tCreateRenderer)(SDL_Window *, int ,Uint32);
 std::unique_ptr<Detour<tCreateRenderer>> create_renderer = nullptr;
